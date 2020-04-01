@@ -1,9 +1,10 @@
 import sys
-import Fish
+import Fish, Bugs
 
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large" "largest", "largeish"]
 loc_commands = ["sea", "pond", "river", "rivermouth", "rivercliff"]
 critter_commands = ["bug", "fish"]
+info_commands = ["new"]
 
 def print_list(l):
     string = ""
@@ -13,7 +14,7 @@ def print_list(l):
 
 print("Meta commands: quit, help")
 while True:
-    critter, loc, size = "any", "any", "any"
+    critter, loc, size, info = "any", "any", "any", "any"
     cmd = input("Separate words with commas, remember to at least include \"bug\" or \"fish\": ").lower().split(',')
     if "help" in cmd:
         print("Supported animal types: ")
@@ -33,14 +34,21 @@ while True:
             loc = word
         elif word in size_commands:
             size = word
+        elif word in info_commands:
+            info = word
         else:
             print(f'Sorry, I don\'t know what "{word}" means. Did you separate commands with a comma?')
             print()
             continue
     
-    print(f"Searching for {size} size {critter}-type animal at {loc} location...")
     if critter == "fish":
-        print(Fish.get_fish(size, loc))
-        print()
-
+        if info == "any":
+            print(f"Searching for currently available {size} size fish at {loc} location...")
+            print(Fish.get_fish(size, loc))
+        elif info == "new":
+            print(f"Searching for new fish this month...")
+            print(Fish.new_fish())
+    elif critter == "bug" or critter == "bugs":
+        print(f"Searching for currently available bugs...")
+        print(Bugs.get_bugs())
 
