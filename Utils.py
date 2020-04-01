@@ -1,4 +1,20 @@
 import pandas as pd
+from datetime import datetime
+
+months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+current_month = datetime.now().month - 1
+
+def format_month(month):
+    return months[(month + 12) % 12]
+
+def curr_month():
+    return months[current_month]
+
+def prev_month():
+    return format_month(current_month - 1)
+
+def next_month():
+    return format_month(current_month + 1)
 
 def crosstable_to_tidy(table=None, attribute_field_name=None, data_field_name=None, sheet='all', qualifying_fields=1):
 

@@ -1,15 +1,8 @@
 from datetime import datetime
 import pandas as pd
-
-months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
-current_month = datetime.now().month - 1
-prev_month = current_month - 1
-next_month = current_month + 1
+import Utils
 
 df = pd.read_excel('fish.xlsx')
-
-def __format_month(month):
-    return months[month % 12]
 
 def __format_size(size):
     sizes = {
@@ -36,7 +29,7 @@ def __format_loc(loc):
 def get_fish(size, loc):
     size = __format_size(size)
     loc = __format_loc(loc)
-    current_month_text = __format_month(current_month)
+    current_month_text = Utils.current_month()
     current_hour = datetime.now().hour
 
     filter_month = (df['Months'] == current_month_text) & df['isMonth']
@@ -47,5 +40,15 @@ def get_fish(size, loc):
     result = df[filter_month & filter_hour & filter_loc & filter_size]['fish'].values
     return result
 
-"""TODO: new_fish(), check fishes available this month that weren't available last month"""
+"""TODO: fix this (only return one fish/value)"""
+def new_fish():
+    current_month_text = Utils.current_month()
+    prev_month_text = Utils.prev_month()
+    filter_months = (df['Months'] == current_month_text) & (df['Months'] != prev_month_text)
+
+    result = df[filter_months]['fish'].values
+    return result
+
+print(new_fish())
+
 """TODO: expiring_fish() (name pending), check fishes available this month that won't be available next month"""
