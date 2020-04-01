@@ -15,6 +15,32 @@ def get_bugs():
     result = df[filter_month & filter_hour]['bug'].values
     return result
 
-"""TODO: new_bugs() - check which bugs are available this month that weren't last month"""
-"""TODO: expiring_bugs() (name pending), check bugs available this month that won't be available next month"""
+"""TODO: verify if this returns correct results"""
+def new_bugs():
+    current_month_text = Utils.curr_month()
+    prev_month_text = Utils.prev_month()
+    
+    filter_this_month = (df['Months'] == current_month_text) & (df['isMonth'])
+    filter_prev_month = (df['Months'] == prev_month_text) & (df['isMonth'] == False)
+    
+    bugs_this_month = set(df[filter_this_month]['bug'].values) #bugs that are available current month
+    bugs_prev_month = set(df[filter_prev_month]['bug'].values) #bugs that were not available previous month
+    
+    result = bugs_this_month.intersection(bugs_prev_month) #the intersection of above two sets
+    return result
+
+"""TODO: verify if this returns correct results (name pending)"""
+def expiring_bugs():
+    current_month_text = Utils.curr_month()
+    next_month_text = Utils.next_month()
+    
+    filter_this_month = (df['Months'] == current_month_text) & (df['isMonth'])
+    filter_next_month = (df['Months'] == next_month_text) & (df['isMonth'] == False)
+    
+    bugs_this_month = set(df[filter_this_month]['bug'].values) #bugs that are available current month
+    bugs_next_month = set(df[filter_next_month]['bug'].values) #bugs that are not available next month
+    
+    result = bugs_this_month.intersection(bugs_next_month) #the intersection of above two sets
+    return result
+
 """TODO: get_info(bug) - return information on when & where bug will be available"""

@@ -3,8 +3,8 @@ import Fish, Bugs
 
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large" "largest", "largeish"]
 loc_commands = ["sea", "pond", "river", "rivermouth", "rivercliff"]
-critter_commands = ["bug", "fish"]
-info_commands = ["new"]
+critter_commands = ["bug", "bugs", "fish"]
+info_commands = ["new", "expiring"]
 
 def print_list(l):
     string = ""
@@ -41,6 +41,7 @@ while True:
             print()
             continue
     
+    """ I'm sorry """
     if critter == "fish":
         if info == "any":
             print(f"Searching for currently available {size} size fish at {loc} location...")
@@ -48,7 +49,16 @@ while True:
         elif info == "new":
             print(f"Searching for new fish this month...")
             print(Fish.new_fish())
+        elif info == "expiring":
+            print(f"Searching for fish that will be unavailable next month...")
+            print(Fish.expiring_fish())
     elif critter == "bug" or critter == "bugs":
-        print(f"Searching for currently available bugs...")
-        print(Bugs.get_bugs())
-
+        if info == "any":
+            print(f"Searching for currently available bugs...")
+            print(Bugs.get_bugs())
+        elif info == "new":
+            print(f"Searching for new bugs this month...")
+            print(Bugs.new_bugs())
+        elif info == "expiring":
+            print(f"Searching for bugs that will be unavailable next month...")
+            print(Bugs.expiring_bugs())
