@@ -29,7 +29,7 @@ def __format_loc(loc):
 def get_fish(size, loc):
     size = __format_size(size)
     loc = __format_loc(loc)
-    current_month_text = Utils.current_month()
+    current_month_text = Utils.curr_month()
     current_hour = datetime.now().hour
 
     filter_month = (df['Months'] == current_month_text) & df['isMonth']
@@ -42,13 +42,12 @@ def get_fish(size, loc):
 
 """TODO: fix this (only return one fish/value)"""
 def new_fish():
-    current_month_text = Utils.current_month()
+    current_month_text = Utils.curr_month()
     prev_month_text = Utils.prev_month()
     filter_months = (df['Months'] == current_month_text) & (df['Months'] != prev_month_text)
 
     result = df[filter_months]['fish'].values
     return result
 
-print(new_fish())
 
 """TODO: expiring_fish() (name pending), check fishes available this month that won't be available next month"""
