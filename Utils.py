@@ -77,21 +77,26 @@ def bugs_dataframe(bugs_input):
     bugs_dict = {i: d for i, d in enumerate(bugs_input)}
     times = {}
     for k in bugs_dict.keys():
-        diff = set(range(25)) - bugs_dict[k]['time'] #missing hours
-        diffs = ['NA']*len(diff) #'NA' inplace of missing hours
-        times[k] = list(bugs_dict[k]['time']) + diffs #add missing hours to original times
+        if 'time' in bugs_dict[k].keys(): #some bugs.txt elements do not contain 'time'
+            diff = set(range(25)) - bugs_dict[k]['time'] #missing hours
+            diffs = ['NA']*len(diff) #'NA' inplace of missing hours
+            times[k] = list(bugs_dict[k]['time']) + diffs #add missing hours to original times
+        else:
+            diffs = ['NA']*len(range(25))
+            times[k] = diffs #add missing hours to original times
+        
 
     df = pd.DataFrame(bugs_dict).transpose()
     df_time = pd.DataFrame(times).transpose()
 
-    df_base = df[['fish', 'location', 'shadowSize', 'value']]
-    df_months = df[['fish', 'location', 'shadowSize', 'value',  'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']]
+    df_base = df[['bug', 'location', 'value']]
+    df_months = df[['bug', 'location', 'value', 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']]
     df_times = pd.merge(df_base, df_time, how='outer', on=df.index)
 
-    df_months_tidy = crosstable_to_tidy(df_months, 'Months', 'isMonth', qualifying_fields=4)
-    df_times_tidy = crosstable_to_tidy(df_times.drop('key_0', axis=1), 'Times', 'isTime', qualifying_fields=4)
+    df_months_tidy = crosstable_to_tidy(df_months, 'Months', 'isMonth', qualifying_fields=3)
+    df_times_tidy = crosstable_to_tidy(df_times.drop('key_0', axis=1), 'Times', 'isTime', qualifying_fields=3)
     df_times_tidy['isTime'] = df_times_tidy['isTime'].apply(lambda x: True if x != 'NA' else False)
 
-    df_final = pd.merge(df_months_tidy, df_times_tidy, how='outer', on=['fish', 'location', 'shadowSize', 'value'])
+    df_final = pd.merge(df_months_tidy, df_times_tidy, how='outer', on=['bug', 'location', 'value'])
 
     return df_final
