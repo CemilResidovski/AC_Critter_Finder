@@ -1,6 +1,6 @@
 import pandas as pd
 
-def __crosstable_to_tidy(table=None, attribute_field_name=None, data_field_name=None, sheet='all', qualifying_fields=1):
+def crosstable_to_tidy(table=None, attribute_field_name=None, data_field_name=None, sheet='all', qualifying_fields=1):
 
     ''' Reads a file or dataframe that contains data of crosstable structure, i.e. orthogonal, 
         and returns a tidy dataframe, more suitable for further analysis.
@@ -34,7 +34,7 @@ def __crosstable_to_tidy(table=None, attribute_field_name=None, data_field_name=
 
     return df_crosstab
 
-def __fish_dataframe(fishes_input):
+def fish_dataframe(fishes_input):
     fish_dict = {i: d for i, d in enumerate(fishes_input)}
     times = {}
     for k in fish_dict.keys():
@@ -49,8 +49,31 @@ def __fish_dataframe(fishes_input):
     df_months = df[['fish', 'location', 'shadowSize', 'value',  'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']]
     df_times = pd.merge(df_base, df_time, how='outer', on=df.index)
 
-    df_months_tidy = __crosstable_to_tidy(df_months, 'Months', 'isMonth', qualifying_fields=4)
-    df_times_tidy = __crosstable_to_tidy(df_times.drop('key_0', axis=1), 'Times', 'isTime', qualifying_fields=4)
+    df_months_tidy = crosstable_to_tidy(df_months, 'Months', 'isMonth', qualifying_fields=4)
+    df_times_tidy = crosstable_to_tidy(df_times.drop('key_0', axis=1), 'Times', 'isTime', qualifying_fields=4)
+    df_times_tidy['isTime'] = df_times_tidy['isTime'].apply(lambda x: True if x != 'NA' else False)
+
+    df_final = pd.merge(df_months_tidy, df_times_tidy, how='outer', on=['fish', 'location', 'shadowSize', 'value'])
+
+    return df_final
+
+def bugs_dataframe(bugs_input):
+    bugs_dict = {i: d for i, d in enumerate(bugs_input)}
+    times = {}
+    for k in bugs_dict.keys():
+        diff = set(range(25)) - bugs_dict[k]['time'] #missing hours
+        diffs = ['NA']*len(diff) #'NA' inplace of missing hours
+        times[k] = list(bugs_dict[k]['time']) + diffs #add missing hours to original times
+
+    df = pd.DataFrame(bugs_dict).transpose()
+    df_time = pd.DataFrame(times).transpose()
+
+    df_base = df[['fish', 'location', 'shadowSize', 'value']]
+    df_months = df[['fish', 'location', 'shadowSize', 'value',  'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']]
+    df_times = pd.merge(df_base, df_time, how='outer', on=df.index)
+
+    df_months_tidy = crosstable_to_tidy(df_months, 'Months', 'isMonth', qualifying_fields=4)
+    df_times_tidy = crosstable_to_tidy(df_times.drop('key_0', axis=1), 'Times', 'isTime', qualifying_fields=4)
     df_times_tidy['isTime'] = df_times_tidy['isTime'].apply(lambda x: True if x != 'NA' else False)
 
     df_final = pd.merge(df_months_tidy, df_times_tidy, how='outer', on=['fish', 'location', 'shadowSize', 'value'])
