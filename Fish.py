@@ -18,13 +18,19 @@ def get_fish(size, loc):
     result = df[filter_month & filter_hour & filter_loc & filter_size]['fish'].values
     return result
 
-"""TODO: fix this (only return one fish/value)"""
+"""TODO: verify if this returns correct results"""
 def new_fish():
     current_month_text = Utils.curr_month()
     prev_month_text = Utils.prev_month()
-    filter_months = (df['Months'] == current_month_text) & (df['Months'] != prev_month_text)
-
-    result = df[filter_months]['fish'].values
+    
+    filter_this_month = (df['Months'] == current_month_text) & (df['isMonth'])
+    filter_prev_month = (df['Months'] == prev_month_text) & (df['isMonth'] == False)
+    
+    fish_this_month = set(df[filter_this_month]['fish'].values)
+    fish_prev_month = set(df[filter_prev_month]['fish'].values)
+    
+    result = fish_this_month.intersection(fish_prev_month)
+    
     return result
 
 
