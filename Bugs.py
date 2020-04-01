@@ -1,7 +1,7 @@
 from datetime import datetime
 import pandas as pd
 import json
-import Table_Tidier
+import Utils
 
 bugs = {
         "caught": False,
@@ -1605,5 +1605,9 @@ bugs = {
     }
 
 
-df = Table_Tidier.bugs_dataframe(bugs)
+df = Utils.bugs_dataframe(bugs)
 print(df.keys())
+
+"""TODO: new_bugs() - check which bugs are available this month that weren't last month"""
+"""TODO: expiring_bugs() (name pending), check bugs available this month that won't be available next month"""
+"""TODO: get_info(bug) - return information on when & where bug will be available"""

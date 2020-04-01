@@ -16,6 +16,28 @@ def prev_month():
 def next_month():
     return format_month(current_month + 1)
 
+def format_size(size):
+    sizes = {
+        "largeish": ["Large", "X Large", "Largest"],
+        "smallish": ["Smallest", "Small"],
+        "any": ["Smallest", "Small", "Medium", "large", "Large", "X Large", "Largest"]
+    }
+    if size in sizes:
+        return sizes[size]
+    return [size.capitalize()]
+
+def format_loc(loc):
+    locations = {
+        "river": ["River"],
+        "rivercliff": ["River (Clifftop)"],
+        "rivermouth": ["River (mouth)"],
+        "sea": ["Sea", "Pier", "Sea (rainy days)"],
+        "pond": ["Pond"],
+        "any": ["River", "River (Clifftop)", "River (mouth)", "Sea", "Sea (rainy days)", "Pier", "Pond"]}
+    if loc in locations:
+        return locations[loc]
+    return [loc.capitalize()]
+
 def crosstable_to_tidy(table=None, attribute_field_name=None, data_field_name=None, sheet='all', qualifying_fields=1):
 
     ''' Reads a file or dataframe that contains data of crosstable structure, i.e. orthogonal, 

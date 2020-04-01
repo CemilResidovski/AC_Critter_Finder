@@ -4,31 +4,9 @@ import Utils
 
 df = pd.read_excel('fish.xlsx')
 
-def __format_size(size):
-    sizes = {
-        "largeish": ["Large", "X Large", "Largest"],
-        "smallish": ["Smallest", "Small"],
-        "any": ["Smallest", "Small", "Medium", "large", "Large", "X Large", "Largest"]
-    }
-    if size in sizes:
-        return sizes[size]
-    return [size.capitalize()]
-
-def __format_loc(loc):
-    locations = {
-        "river": ["River"],
-        "rivercliff": ["River (Clifftop)"],
-        "rivermouth": ["River (mouth)"],
-        "sea": ["Sea", "Pier", "Sea (rainy days)"],
-        "pond": ["Pond"],
-        "any": ["River", "River (Clifftop)", "River (mouth)", "Sea", "Sea (rainy days)", "Pier", "Pond"]}
-    if loc in locations:
-        return locations[loc]
-    return [loc.capitalize()]
-
 def get_fish(size, loc):
-    size = __format_size(size)
-    loc = __format_loc(loc)
+    size = Utils.format_size(size)
+    loc = Utils.format_loc(loc)
     current_month_text = Utils.curr_month()
     current_hour = datetime.now().hour
 
@@ -51,3 +29,4 @@ def new_fish():
 
 
 """TODO: expiring_fish() (name pending), check fishes available this month that won't be available next month"""
+"""TODO: get_info(fish) - return information on when & where fish will be available"""
