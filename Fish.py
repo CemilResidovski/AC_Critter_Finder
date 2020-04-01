@@ -18,7 +18,6 @@ def get_fish(size, loc):
     result = df[filter_month & filter_hour & filter_loc & filter_size]['fish'].values
     return result
 
-"""TODO: verify if this returns correct results"""
 def new_fish():
     current_month_text = Utils.curr_month()
     prev_month_text = Utils.prev_month()
@@ -33,8 +32,6 @@ def new_fish():
     
     return result
 
-
-"""TODO: verify if this returns correct results (name pending)"""
 def expiring_fish():
     current_month_text = Utils.curr_month()
     next_month_text = Utils.next_month()
@@ -49,4 +46,16 @@ def expiring_fish():
     
     return result
 
-"""TODO: get_info(fish) - return information on when & where fish will be available"""
+def get_info(fish):
+
+    assert fish in df.fish.values, f"{fish} not found, make sure spelling is correct!"
+
+    this_df = df[df['isMonth'] & df['isTime'] & (df['fish'] == fish)]
+    this_df = this_df[['location', 'Months', 'Times']]
+    this_df['Times'] = this_df['Times'].astype(str)
+    
+    group = this_df.groupby(['location', 'Months'])
+    
+    result = group['Times'].apply(','.join).reset_index() #available times per (available) month and location for chosen fish
+
+    return result
