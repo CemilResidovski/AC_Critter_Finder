@@ -26,13 +26,27 @@ def new_fish():
     filter_this_month = (df['Months'] == current_month_text) & (df['isMonth'])
     filter_prev_month = (df['Months'] == prev_month_text) & (df['isMonth'] == False)
     
-    fish_this_month = set(df[filter_this_month]['fish'].values)
-    fish_prev_month = set(df[filter_prev_month]['fish'].values)
+    fish_this_month = set(df[filter_this_month]['fish'].values) #fish that are available current month
+    fish_prev_month = set(df[filter_prev_month]['fish'].values) #fish that were not available previous month
     
-    result = fish_this_month.intersection(fish_prev_month)
+    result = fish_this_month.intersection(fish_prev_month) #the intersection of above two sets
     
     return result
 
 
-"""TODO: expiring_fish() (name pending), check fishes available this month that won't be available next month"""
+"""TODO: verify if this returns correct results (name pending)"""
+def expiring_fish():
+    current_month_text = Utils.curr_month()
+    next_month_text = Utils.next_month()
+    
+    filter_this_month = (df['Months'] == current_month_text) & (df['isMonth'])
+    filter_next_month = (df['Months'] == next_month_text) & (df['isMonth'] == False)
+    
+    fish_this_month = set(df[filter_this_month]['fish'].values) #fish that are available current month
+    fish_next_month = set(df[filter_next_month]['fish'].values) #fish that are not available next month
+    
+    result = fish_this_month.intersection(fish_next_month) #the intersection of above two sets
+    
+    return result
+
 """TODO: get_info(fish) - return information on when & where fish will be available"""
