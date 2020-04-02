@@ -1,8 +1,8 @@
 import sys
 import Fish, Bugs
 
-size_commands = ["smallish", "smallest", "small", "medium", "large", "x large" "largest", "largeish"]
-loc_commands = ["sea", "pond", "river", "rivermouth", "rivercliff"]
+size_commands = ["smallish", "smallest", "small", "medium", "large", "x large", "largest", "largeish"]
+loc_commands = ["sea", "pond", "rivers", "river", "rivermouth", "rivercliff"]
 critter_commands = ["bug", "bugs", "fish"]
 info_commands = ["new", "expiring", "find", "info"]
 

@@ -33,7 +33,9 @@ def format_loc(loc):
         "rivermouth": ["River (mouth)"],
         "sea": ["Sea", "Pier", "Sea (rainy days)"],
         "pond": ["Pond"],
-        "any": ["River", "River (Clifftop)", "River (mouth)", "Sea", "Sea (rainy days)", "Pier", "Pond"]}
+        "any": ["River", "River (Clifftop)", "River (mouth)", "Sea", "Sea (rainy days)", "Pier", "Pond"],
+        "rivers": ["River", "River (Clifftop)", "River (mouth)"]
+    }
     if loc in locations:
         return locations[loc]
     return [loc.capitalize()]
