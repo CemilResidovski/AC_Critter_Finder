@@ -14,10 +14,12 @@ def print_list(l):
 
 print("Meta commands: quit, help")
 while True:
-    critter, loc, size, info = "any", "any", "any", "any"
+    critter, loc, size, info, to_find = "any", "any", "any", "any", "any"
     print()
-    cmd = input("Separate words with commas, remember to at least include \"bug\" or \"fish\": ").lower().split(',')
-    if "help" in cmd:
+    cmd = input("Remember to at least include \"bug\" or \"fish\": ").lower()
+    if "quit" in cmd:
+        sys.exit()
+    elif "help" in cmd:
         print("Supported animal types: ")
         print_list(critter_commands)
         print("Supported sizes: ")
@@ -26,9 +28,19 @@ while True:
         print_list(loc_commands)
         print("Supported actions: ")
         print_list(info_commands)
+        print("To search for eg. a fish: write fish find \"sea bass\"")
         continue
-    elif "quit" in cmd:
-        sys.exit()
+    elif "info" in cmd or "find" in cmd:
+        start_index = cmd.find('"')
+        if (start_index == -1):
+            print("Please write in the critter name you want to find within quotation signs (\")")
+            continue
+        end_index = cmd.find('"', start_index + 1)
+        first_half = cmd[:start_index]
+        second_half = cmd[end_index + 1:]
+        critter_to_find = cmd[start_index + 1:end_index].title()
+        cmd = (first_half + second_half)
+    cmd = cmd.split()
     for word in cmd: 
         word = word.strip()
         if word in critter_commands:
@@ -54,6 +66,10 @@ while True:
         elif info == "expiring":
             print(f"Searching for fish that will be unavailable next month...")
             print_list(Fish.expiring_fish())
+        elif info == "find":
+            print(f"Searching for fish called {critter_to_find}...")
+            print(Fish.get_info(critter_to_find))
+
     elif critter == "bug" or critter == "bugs":
         if info == "any":
             print(f"Searching for currently available bugs...")
@@ -64,3 +80,6 @@ while True:
         elif info == "expiring":
             print(f"Searching for bugs that will be unavailable next month...")
             print_list(Bugs.expiring_bugs())
+        elif info == "find" or info == "info":
+            print(f"Searching for bugs called {critter_to_find}...")
+            print(Bugs.get_info(critter_to_find))
