@@ -4,7 +4,7 @@ import Fish, Bugs
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large" "largest", "largeish"]
 loc_commands = ["sea", "pond", "river", "rivermouth", "rivercliff"]
 critter_commands = ["bug", "bugs", "fish"]
-info_commands = ["new", "expiring"]
+info_commands = ["new", "expiring", "find", "info"]
 
 def print_list(l):
     string = ""
@@ -15,6 +15,7 @@ def print_list(l):
 print("Meta commands: quit, help")
 while True:
     critter, loc, size, info = "any", "any", "any", "any"
+    print()
     cmd = input("Separate words with commas, remember to at least include \"bug\" or \"fish\": ").lower().split(',')
     if "help" in cmd:
         print("Supported animal types: ")
@@ -23,6 +24,8 @@ while True:
         print_list(size_commands)
         print("Supported locations: ")
         print_list(loc_commands)
+        print("Supported actions: ")
+        print_list(info_commands)
         continue
     elif "quit" in cmd:
         sys.exit()
@@ -38,27 +41,26 @@ while True:
             info = word
         else:
             print(f'Sorry, I don\'t know what "{word}" means. Did you separate commands with a comma?')
-            print()
             continue
     
     """ I'm sorry """
     if critter == "fish":
         if info == "any":
             print(f"Searching for currently available {size} size fish at {loc} location...")
-            print(Fish.get_fish(size, loc))
+            print_list(Fish.get_fish(size, loc))
         elif info == "new":
             print(f"Searching for new fish this month...")
-            print(Fish.new_fish())
+            print_list(Fish.new_fish())
         elif info == "expiring":
             print(f"Searching for fish that will be unavailable next month...")
-            print(Fish.expiring_fish())
+            print_list(Fish.expiring_fish())
     elif critter == "bug" or critter == "bugs":
         if info == "any":
             print(f"Searching for currently available bugs...")
-            print(Bugs.get_bugs())
+            print_list(Bugs.get_bugs())
         elif info == "new":
             print(f"Searching for new bugs this month...")
-            print(Bugs.new_bugs())
+            print_list(Bugs.new_bugs())
         elif info == "expiring":
             print(f"Searching for bugs that will be unavailable next month...")
-            print(Bugs.expiring_bugs())
+            print_list(Bugs.expiring_bugs())
