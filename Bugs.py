@@ -44,3 +44,16 @@ def expiring_bugs():
     return result
 
 """TODO: get_info(bug) - return information on when & where bug will be available"""
+def get_info(bug):
+
+    assert bug in df.bug.values, f"{bug} not found, make sure spelling is correct!"
+
+    this_df = df[df['isMonth'] & df['isTime'] & (df['bug'] == bug)]
+    this_df = this_df[['location', 'Months', 'Times']]
+    this_df['Times'] = this_df['Times'].astype(str)
+    
+    group = this_df.groupby(['location', 'Months'])
+    
+    result = group['Times'].apply(','.join).reset_index() #available times per (available) month and location for chosen bug
+
+    return result
