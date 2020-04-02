@@ -1,8 +1,13 @@
 import pandas as pd
 import Utils
 import calendar
+from datetime import datetime
 
 month_to_num = {v.lower(): k for k,v in enumerate(calendar.month_abbr) if k > 0}
+#current_month_text = Utils.curr_month()
+#prev_month_text = Utils.prev_month()
+#next_month_text = Utils.next_month()
+#current_hour = datetime.now().hour
 
 '''TODO: load files here or in main?'''
 df_fish = pd.read_excel('fish.xlsx')
@@ -66,11 +71,49 @@ class Critter():
         result.drop('MonthsNum', axis=1, inplace=True)
         
         return result
-    
 
-#fish, bug = Critter(df_fish, 'fish'), Critter(df_bugs, 'bug')
+class Fish(Critter):
 
-#print(fish.new())
+    def __init__(self, df, ctype='fish'):
+        self.df = df
+        self.ctype = ctype
+
+    def get_fish(self, loc, size):
+        size = Utils.format_size(size)
+        loc = Utils.format_loc(loc)
+        current_month_text = Utils.curr_month()
+        current_hour = datetime.now().hour
+
+        filter_month = (self.df['Months'] == current_month_text) & self.df['isMonth']
+        filter_hour = (self.df['Times'] == current_hour) & self.df['isTime']
+        filter_loc = (self.df['location'].isin(loc))
+        filter_size = (self.df['shadowSize'].isin(size))
+
+        result = self.df[filter_month & filter_hour & filter_loc & filter_size][self.ctype].values
+        return result
+
+class Bug(Critter):
+
+    def __init__(self, df, ctype='bug'):
+        self.df = df
+        self.ctype = ctype
+
+    def get_bugs(self):
+        current_month_text = Utils.curr_month()
+        current_hour = datetime.now().hour
+
+        filter_month = (self.df['Months'] == current_month_text) & self.df['isMonth']
+        filter_hour = (self.df['Times'] == current_hour) & self.df['isTime']
+
+        result = self.df[filter_month & filter_hour][self.ctype].values
+
+        return result
+
+fish, bug = Fish(df_fish), Bug(df_bugs)
+
+print(fish.get_fish('sea', 'small'))
+print(bug.get_bugs())
+
 #print(bug.new())
 #print(fish.expiring())
 #print(bug.expiring())
