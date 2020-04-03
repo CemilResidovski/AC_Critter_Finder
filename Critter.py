@@ -2,6 +2,9 @@ import pandas as pd
 import Utils
 import calendar
 from datetime import datetime
+import regex as re
+
+pd.options.display.max_colwidth = 100
 
 month_to_num = {v.lower(): k for k,v in enumerate(calendar.month_abbr) if k > 0}
 
@@ -42,21 +45,24 @@ class Critter:
     def get_info(self, critter):
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
 
-        assert critter in self.df[self.ctype].values, f"{critter} not found, make sure spelling is correct!"
+        critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=re.IGNORECASE)
+        
+        assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0, f"No critter named {critter} was found, make sure spelling is correct!"
 
-        this_df = self.df[self.df['isMonth'] & self.df['isTime'] & (self.df[self.ctype] == critter)][['location', 'Months', 'value', 'Times']]
+        this_df = self.df[self.df['isMonth'] & self.df['isTime'] & critter_name_criterion][[self.ctype, 'location', 'Months', 'value', 'Times']]
         this_df['Times'] = this_df['Times'].astype(str)
         this_df['value'] = this_df['value'].astype(int)
         
-        group = this_df.groupby(['location', 'Months', 'value'])
+        group = this_df.groupby([self.ctype, 'location', 'Months', 'value'])
         
-        result = group['Times'].apply(','.join).reset_index() #available times per (available) month and location for chosen critter
+        result = group['Times'].apply(','.join).reset_index() #available times per (available) month and location for chosen critter(s)
         
         #sorting on months
         result['MonthsNum'] = result['Months'].map(month_to_num)
-        result = result.sort_values(by=['MonthsNum'])
+        result = result.sort_values(by=[self.ctype, 'MonthsNum'])
         result.drop('MonthsNum', axis=1, inplace=True)
-        return result
+ 
+        return result.to_string(index=False)
 
 
 class Fish:
