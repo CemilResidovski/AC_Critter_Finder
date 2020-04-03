@@ -113,21 +113,20 @@ class Bug:
     def get_bug_info(self, critter):
         return Critter(self.df, self.ctype).get_info(critter)
 
-"""TODO: find some way to see if SingletonDB.__instance == None without DataFrame ValueError.
-Apparently checking an existing df == None throws errors so that's fun"""
+
 class FishDB:
     __instance = None
     
     @staticmethod 
     def get_instance():
         """ Static access method. """
-        if FishDB.__instance == None:
+        if FishDB.__instance is None:
             FishDB()
         return FishDB.__instance
     
     def __init__(self):
         """ Virtually private constructor. """
-        if FishDB.__instance != None:
+        if FishDB.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
             FishDB.__instance = pd.read_excel("fish.xlsx")
@@ -139,13 +138,13 @@ class BugDB:
     @staticmethod 
     def get_instance():
         """ Static access method. """
-        if BugDB.__instance == None:
+        if BugDB.__instance is None:
             BugDB()
         return BugDB.__instance
     
     def __init__(self):
         """ Virtually private constructor. """
-        if BugDB.__instance != None:
+        if BugDB.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
             BugDB.__instance = pd.read_excel("bugs.xlsx")
