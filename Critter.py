@@ -136,6 +136,9 @@ class Bug:
     
     def get_bug_info(self, critter):
         return Critter(self.df, self.ctype).get_info(critter)
+    
+    def most_valuable_bug(self):
+        return Critter(self.df, self.ctype).most_valuable()
 
 
 class FishDB:
