@@ -41,7 +41,7 @@ class Critter:
         
         result = critter_this_month.intersection(critter_next_month) #the intersection of above two sets
         return result
-    
+
     def get_info(self, critter):
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
 
@@ -51,7 +51,7 @@ class Critter:
 
         this_df = self.df[self.df['isMonth'] & self.df['isTime'] & critter_name_criterion][[self.ctype, 'location', 'Months', 'value', 'Times']]
         this_df['Times'] = this_df['Times'].astype(str)
-        this_df['value'] = this_df['value'].astype(int)
+        this_df['value'] = this_df['value'].apply(lambda v: int(v) if v != '?' else 0)
         
         group = this_df.groupby([self.ctype, 'location', 'Months', 'value'])
         
@@ -63,6 +63,21 @@ class Critter:
         result.drop('MonthsNum', axis=1, inplace=True)
  
         return result.to_string(index=False)
+
+    def most_valuable(self, top=10):
+        this_df = self.df[self.df['isMonth'] & self.df['isTime']][[self.ctype, 'location', 'value' ]]
+        this_df['value'] = this_df['value'].apply(lambda v: int(v) if v != '?' else 0)
+        
+        group = this_df.groupby([self.ctype, 'location'])
+        
+        result = group.mean().reset_index() #value per location and given critter type
+        
+        #sorting on values, descending, showing top 10  per default
+        result = result.sort_values(by=['value', self.ctype], ascending=False)
+        result = result.iloc[:top,:]
+
+        return result.to_string(index=False)
+
 
 
 class Fish:
@@ -93,6 +108,9 @@ class Fish:
     
     def get_fish_info(self, critter):
         return Critter(self.df, self.ctype).get_info(critter)
+    
+    def most_valuable_fish(self):
+        return Critter(self.df, self.ctype).most_valuable()
 
 class Bug:
 
