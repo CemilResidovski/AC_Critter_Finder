@@ -47,7 +47,7 @@ class Critter:
 
         critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=re.IGNORECASE)
         
-        assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0, f"No critter named {critter} was found, make sure spelling is correct!"
+        assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0, f"No critter matching {critter} was found, make sure spelling is correct!"
 
         this_df = self.df[self.df['isMonth'] & self.df['isTime'] & critter_name_criterion][[self.ctype, 'location', 'Months', 'value', 'Times']]
         this_df['Times'] = this_df['Times'].astype(str)
