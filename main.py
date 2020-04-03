@@ -1,8 +1,6 @@
 import sys
 import Fish, Bugs
-
-'''TODO: from Critter import Fish, Bug #instead of above'''
-
+from Critter import Fish, Bug
 
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large", "largest", "largeish"]
 loc_commands = ["sea", "pond", "rivers", "river", "rivermouth", "rivercliff"]
@@ -60,29 +58,31 @@ while True:
     
     """ I'm sorry """
     if critter == "fish":
+        f = Fish()
         if info == "any":
             print(f"Searching for currently available {size} size fish at {loc} location...")
-            print_list(Fish.get_fish(size, loc))
+            print_list(f.get_fish(size, loc))
         elif info == "new":
             print(f"Searching for new fish this month...")
-            print_list(Fish.new_fish())
+            print_list(f.new_fish())
         elif info == "expiring":
             print(f"Searching for fish that will be unavailable next month...")
-            print_list(Fish.expiring_fish())
+            print_list(f.expiring_fish())
         elif info == "find":
             print(f"Searching for fish called {critter_to_find}...")
-            print(Fish.get_info(critter_to_find))
+            print(f.get_fish_info(critter_to_find))
 
     elif critter == "bug" or critter == "bugs":
+        b = Bug()
         if info == "any":
             print(f"Searching for currently available bugs...")
-            print_list(Bugs.get_bugs())
+            print_list(b.get_bugs())
         elif info == "new":
             print(f"Searching for new bugs this month...")
-            print_list(Bugs.new_bugs())
+            print_list(b.new_bugs())
         elif info == "expiring":
             print(f"Searching for bugs that will be unavailable next month...")
-            print_list(Bugs.expiring_bugs())
+            print_list(b.expiring_bugs())
         elif info == "find" or info == "info":
             print(f"Searching for bugs called {critter_to_find}...")
-            print(Bugs.get_info(critter_to_find))
+            print(b.get_bug_info(critter_to_find))

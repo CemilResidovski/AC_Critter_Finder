@@ -5,18 +5,10 @@ from datetime import datetime
 
 month_to_num = {v.lower(): k for k,v in enumerate(calendar.month_abbr) if k > 0}
 
-
-'''TODO: load files here or in main?'''
-df_fish = pd.read_excel('fish.xlsx')
-df_bugs = pd.read_excel('bugs.xlsx')
-'''TODO: refactorise new, expiring, etc?'''
-
-class Critter():
+class Critter:
 
     def __init__(self, df, ctype):
-        assert isinstance(df, pd.DataFrame), "df must be pandas dataframe with appropriate critter info!"
         self.df = df
-        assert isinstance(ctype, str) and ctype.lower() in ['fish', 'bug'], "ctype must be \'fish\' or \'bug\'!"
         self.ctype = ctype
 
     def new(self):
@@ -31,7 +23,6 @@ class Critter():
         critter_prev_month = set(self.df[filter_prev_month][self.ctype].values) #critter that were not available previous month
         
         result = critter_this_month.intersection(critter_prev_month) #the intersection of above two sets
-        
         return result
     
     def expiring(self):
@@ -46,9 +37,7 @@ class Critter():
         critter_next_month = set(self.df[filter_next_month][self.ctype].values) #critter that are not available next month
         
         result = critter_this_month.intersection(critter_next_month) #the intersection of above two sets
-        
         return result
-
     
     def get_info(self, critter):
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
@@ -67,13 +56,13 @@ class Critter():
         result['MonthsNum'] = result['Months'].map(month_to_num)
         result = result.sort_values(by=['MonthsNum'])
         result.drop('MonthsNum', axis=1, inplace=True)
-        
         return result
 
-class Fish(Critter):
 
-    def __init__(self, df, ctype='fish'):
-        self.df = df
+class Fish:
+
+    def __init__(self, ctype='fish'):
+        self.df = FishDB.get_instance()
         self.ctype = ctype
 
     def get_fish(self, loc, size):
@@ -89,11 +78,20 @@ class Fish(Critter):
 
         result = self.df[filter_month & filter_hour & filter_loc & filter_size][self.ctype].values
         return result
+    
+    def new_fish(self):
+        return Critter(self.df, self.ctype).new()
+    
+    def expiring_fish(self):
+        return Critter(self.df, self.ctype).expiring()
+    
+    def get_fish_info(self, critter):
+        return Critter(self.df, self.ctype).get_info(critter)
 
-class Bug(Critter):
+class Bug:
 
-    def __init__(self, df, ctype='bug'):
-        self.df = df
+    def __init__(self, ctype='bug'):
+        self.df = BugDB.get_instance()
         self.ctype = ctype
 
     def get_bugs(self):
@@ -104,5 +102,50 @@ class Bug(Critter):
         filter_hour = (self.df['Times'] == current_hour) & self.df['isTime']
 
         result = self.df[filter_month & filter_hour][self.ctype].values
-
         return result
+    
+    def new_bugs(self):
+        return Critter(self.df, self.ctype).new()
+    
+    def expiring_bugs(self):
+        return Critter(self.df, self.ctype).expiring()
+    
+    def get_bug_info(self, critter):
+        return Critter(self.df, self.ctype).get_info(critter)
+
+"""TODO: find some way to see if SingletonDB.__instance == None without DataFrame ValueError.
+Apparently checking an existing df == None throws errors so that's fun"""
+class FishDB:
+    __instance = None
+    
+    @staticmethod 
+    def get_instance():
+        """ Static access method. """
+        if FishDB.__instance == None:
+            FishDB()
+        return FishDB.__instance
+    
+    def __init__(self):
+        """ Virtually private constructor. """
+        if FishDB.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            FishDB.__instance = pd.read_excel("fish.xlsx")
+
+
+class BugDB:
+    __instance = None
+    
+    @staticmethod 
+    def get_instance():
+        """ Static access method. """
+        if BugDB.__instance == None:
+            BugDB()
+        return BugDB.__instance
+    
+    def __init__(self):
+        """ Virtually private constructor. """
+        if BugDB.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            BugDB.__instance = pd.read_excel("bugs.xlsx")
