@@ -4,10 +4,7 @@ import calendar
 from datetime import datetime
 
 month_to_num = {v.lower(): k for k,v in enumerate(calendar.month_abbr) if k > 0}
-#current_month_text = Utils.curr_month()
-#prev_month_text = Utils.prev_month()
-#next_month_text = Utils.next_month()
-#current_hour = datetime.now().hour
+
 
 '''TODO: load files here or in main?'''
 df_fish = pd.read_excel('fish.xlsx')
@@ -109,16 +106,3 @@ class Bug(Critter):
         result = self.df[filter_month & filter_hour][self.ctype].values
 
         return result
-
-#fish, bug = Fish(df_fish), Bug(df_bugs)
-
-
-#print(fish.get_info('Stringfish'))
-#print(fish.get_fish('sea', 'small'))
-#print(bug.get_bugs())
-
-#print(bug.new())
-#print(fish.expiring())
-#print(bug.expiring())
-#print(fish.get_info('Stringfish'))
-#print(bug.get_info('Common Butterfly'))
