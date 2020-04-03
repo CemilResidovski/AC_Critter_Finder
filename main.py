@@ -7,10 +7,7 @@ critter_commands = ["bug", "bugs", "fish"]
 info_commands = ["new", "expiring", "find", "info"]
 
 def print_list(l):
-    string = ""
-    for item in l:
-        string += item + ", "
-    print(string[:-2])
+    print(", ".join(l))
 
 print("Meta commands: quit, help")
 while True:

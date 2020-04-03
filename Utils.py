@@ -102,14 +102,13 @@ def bugs_dataframe(bugs_input):
     times = {}
     for k in bugs_dict.keys():
         if 'time' in bugs_dict[k].keys(): #some bugs.txt elements do not contain 'time'
-            diff = set(range(25)) - bugs_dict[k]['time'] #missing hours
+            diff = set(range(24)) - bugs_dict[k]['time'] #missing hours
             diffs = ['NA']*len(diff) #'NA' inplace of missing hours
             times[k] = list(bugs_dict[k]['time']) + diffs #add missing hours to original times
         else:
             diffs = ['NA']*len(range(24))
             times[k] = diffs #add missing hours to original times
         
-
     df = pd.DataFrame(bugs_dict).transpose()
     df_time = pd.DataFrame(times).transpose()
 
@@ -146,8 +145,6 @@ def time_formatting(string):
     range_set = time_range(start_time, end_time)
     return range_set
 
-
-"""TODO: handle different ranges of time ranges "9 a.m. - 4 p.m., 9 p.m. - 4 a.m."""
 def time_format(string):
     if "All day" in string:
         return time_range(0, 23)
