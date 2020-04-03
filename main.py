@@ -52,6 +52,7 @@ while True:
             print(f'Sorry, I don\'t know what "{word}" means. Did you separate commands with a comma?')
             continue
     
+    '''TODO: what do you mean, I'm sorry?'''
     """ I'm sorry """
     if critter == "fish":
         f = Fish()
