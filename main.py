@@ -58,7 +58,7 @@ while True:
         f = Fish()
         if info == "any":
             print(f"Searching for currently available {size} size fish at {loc} location...")
-            print_list(f.get_fish(size, loc))
+            print_list(f.get_fish(loc,size))
         elif info == "new":
             print(f"Searching for new fish this month...")
             print_list(f.new_fish())
