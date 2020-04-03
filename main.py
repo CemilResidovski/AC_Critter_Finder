@@ -68,7 +68,7 @@ while True:
             print(f"Searching for fish called {critter_to_find}...")
             print(f.get_fish_info(critter_to_find))
 
-    elif critter == "bug" or critter == "bugs":
+    elif critter in ["bug", "bugs"]:
         b = Bug()
         if info == "any":
             print(f"Searching for currently available bugs...")
