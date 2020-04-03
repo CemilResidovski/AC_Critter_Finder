@@ -1,5 +1,4 @@
-import sys
-import Fish, Bugs
+from sys import exit
 from Critter import Fish, Bug
 
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large", "largest", "largeish"]
@@ -19,7 +18,7 @@ while True:
     print()
     cmd = input("Remember to at least include \"bug\" or \"fish\": ").lower()
     if "quit" in cmd:
-        sys.exit()
+        exit()
     elif "help" in cmd:
         print("Supported animal types: ")
         print_list(critter_commands)

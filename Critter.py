@@ -129,6 +129,7 @@ class FishDB:
         if FishDB.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
+            print("Loading fish db for the first time, please be patient")
             FishDB.__instance = pd.read_excel("fish.xlsx")
 
 
@@ -147,4 +148,5 @@ class BugDB:
         if BugDB.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
+            print("Loading bug db for the first time, please be patient")
             BugDB.__instance = pd.read_excel("bugs.xlsx")
