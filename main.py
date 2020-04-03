@@ -1,6 +1,9 @@
 import sys
 import Fish, Bugs
 
+'''TODO: from Critter import Fish, Bug #instead of above'''
+
+
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large", "largest", "largeish"]
 loc_commands = ["sea", "pond", "rivers", "river", "rivermouth", "rivercliff"]
 critter_commands = ["bug", "bugs", "fish"]
