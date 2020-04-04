@@ -74,7 +74,10 @@ class Critter:
         result_tmp = result_tmp.sort_values(by=[self.ctype, 'MonthsNum'])
         result_tmp.drop('MonthsNum', axis=1, inplace=True)
 
-        group2 = result_tmp.groupby([self.ctype, 'location', 'value', 'Times'])
+        if self.ctype == "fish":
+            group2 = result_tmp.groupby([self.ctype, 'shadowSize', 'location', 'value', 'Times'])
+        else:
+            group2 = this_df.groupby([self.ctype, 'location', 'value', 'Times'])
 
         result = group2['Months'].apply(','.join).reset_index()
         result['Months'] = result['Months'].apply(lambda m: m.split(',')[0] + '-' + m.split(',')[-1]) #formatting months to only show range
