@@ -50,11 +50,20 @@ class Critter:
         
         assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0, f"No critter matching {critter} was found, make sure spelling is correct!"
 
-        this_df = self.df[self.df['isMonth'] & self.df['isTime'] & critter_name_criterion][[self.ctype, 'location', 'Months', 'value', 'Times']]
+        if self.ctype == "fish":
+            columns = [self.ctype, 'shadowSize', 'location', 'Months', 'value', 'Times']
+        else: 
+            columns = [self.ctype, 'location', 'Months', 'value', 'Times']
+        
+        this_df = self.df[self.df['isMonth'] & self.df['isTime'] & critter_name_criterion][columns]
         this_df['Times'] = this_df['Times'].astype(str)
         this_df['value'] = this_df['value'].apply(lambda v: int(v) if v != '?' else 0)
         
-        group = this_df.groupby([self.ctype, 'location', 'Months', 'value'])
+        if self.ctype == "fish":
+            this_df['shadowSize'] = this_df['shadowSize'].astype(str)
+            group = this_df.groupby([self.ctype, 'shadowSize', 'location', 'Months', 'value'])
+        else:
+            group = this_df.groupby([self.ctype, 'location', 'Months', 'value'])
         
         #available times per (available) month and location for chosen critter(s)
         result_tmp = group['Times'].apply(','.join).reset_index() 
