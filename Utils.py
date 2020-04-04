@@ -29,7 +29,7 @@ def format_size(size):
 def format_loc(loc):
     locations = {
         "river": ["River"],
-        "rivercliff": ["River (Clifftop)"],
+        "rivercliff": ["River (Clifftop)", "River"],
         "rivermouth": ["River (mouth)"],
         "sea": ["Sea", "Pier", "Sea (rainy days)"],
         "pond": ["Pond"],
