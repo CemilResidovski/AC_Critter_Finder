@@ -42,6 +42,7 @@ class Critter:
         result = critter_this_month.intersection(critter_next_month) #the intersection of above two sets
         return result
 
+    '''TODO: check to see if all temporary dataframes take up unneccesary memory space, and if these canYshould be deleted from memory after they are dealt with'''
     def get_info(self, critter):
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
 
@@ -55,13 +56,20 @@ class Critter:
         
         group = this_df.groupby([self.ctype, 'location', 'Months', 'value'])
         
-        result = group['Times'].apply(','.join).reset_index() #available times per (available) month and location for chosen critter(s)
+        #available times per (available) month and location for chosen critter(s)
+        result_tmp = group['Times'].apply(','.join).reset_index() 
+        result_tmp['Times'] = result_tmp['Times'].apply(lambda t: t.split(',')[0] + '-' + t.split(',')[-1]) #formatting times to only show range
         
-        #sorting on months
-        result['MonthsNum'] = result['Months'].map(month_to_num)
-        result = result.sort_values(by=[self.ctype, 'MonthsNum'])
-        result.drop('MonthsNum', axis=1, inplace=True)
- 
+        #sorting on months, needs to be done in order to formatt months correctly below
+        result_tmp['MonthsNum'] = result_tmp['Months'].map(month_to_num)
+        result_tmp = result_tmp.sort_values(by=[self.ctype, 'MonthsNum'])
+        result_tmp.drop('MonthsNum', axis=1, inplace=True)
+
+        group2 = result_tmp.groupby([self.ctype, 'location', 'value', 'Times'])
+
+        result = group2['Months'].apply(','.join).reset_index()
+        result['Months'] = result['Months'].apply(lambda m: m.split(',')[0] + '-' + m.split(',')[-1]) #formatting months to only show range
+
         return result.to_string(index=False)
 
     def most_valuable(self, top=10):
