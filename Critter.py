@@ -3,17 +3,19 @@ import Utils
 import calendar
 from datetime import datetime
 import regex as re
+import collections
 
 pd.options.display.max_colwidth = 100
 
 month_to_num = {v.lower(): k for k,v in enumerate(calendar.month_abbr) if k > 0}
+num_to_month = {k: v.lower() for k,v in enumerate(calendar.month_abbr) if k > 0}
 
 class Critter:
 
     def __init__(self, df, ctype):
         self.df = df
         self.ctype = ctype
-
+    
     def new(self):
         '''Return critters that are available current month but not previous month'''
         current_month_text = Utils.curr_month()
@@ -42,7 +44,74 @@ class Critter:
         result = critter_this_month.intersection(critter_next_month) #the intersection of above two sets
         return result
 
-    '''TODO: check to see if all temporary dataframes take up unneccesary memory space, and if these canYshould be deleted from memory after they are dealt with'''
+    '''TODO: keep here or in Utils?'''
+    def _format_ranges(self, string_input):
+        ''' Return range string, separated by semicolon if original range is broken, e.g. 0-4; 6-8, otherwise 0-8. 
+        In this class used for months and times'''
+        
+        lst = list(map(int, string_input.split(',')))
+        full_range = range(lst[0], lst[-1] + 1)
+        missing = [0] + [x for x in full_range if x not in lst] #find missing numbers in input range, add a leading zero for easier indexing later
+        
+        if len(missing) > 1:
+            #add a semicolon to original range list, in place of missing number(s)
+            for m in missing:
+                if m != 0:
+                    lst.insert(m-1, ';')
+                    
+            #determin index slice(s)
+            indices = []
+            for i,v in enumerate(missing):
+                if i == 0:
+                    indices.append((v, missing[i+1]-1))
+                elif i < len(missing)-1:
+                    indices.append((v+1, missing[i+1]-1))
+                else:
+                    indices.append((v, lst[-1]))
+        else:
+            #if range is not broken, do not slice into subparts
+            indices = [(0, lst[-1]+1)]
+        
+        #create a list based on slices
+        new_lst = [lst[start:end] for start, end in indices]
+
+        #final formatting
+        final_lst = []
+        for elem in new_lst:
+            if len(elem) > 0:
+                if len(elem) > 1:
+                    substring = str(elem[0]) + '-' + str(elem[-1])
+                else: 
+                    substring = str(elem[0])
+                final_lst.append(substring)
+
+        result = '; '.join(final_lst)
+
+        return result
+
+    '''TODO: keep here or in Utils?'''
+    def _month_ranges_totext(self, string_input):
+        ''' Return month ranges as month names instead of numbers, e.g. 1-3;12 -> jan-mar;dec '''
+        
+        month_list = []
+        for i, substring in enumerate(string_input.split(';')):
+            s = substring.split('-')
+            for digit in s:
+                month_list.append((i,num_to_month[int(digit)]))
+
+        months = collections.defaultdict(list)
+        for i,v in month_list:
+            months[i].append(v)
+
+        new_substrings = []
+        for i, v in months.items():
+            new_substrings.append('-'.join(v))
+        
+        result = ';'.join(new_substrings)
+    
+        return result
+
+    '''TODO: check to see if all temporary dataframes take up unneccesary memory space, and if these can/should be deleted from memory after they are dealt with'''
     def get_info(self, critter):
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
 
@@ -67,12 +136,16 @@ class Critter:
         
         #available times per (available) month and location for chosen critter(s)
         result_tmp = group['Times'].apply(','.join).reset_index() 
-        result_tmp['Times'] = result_tmp['Times'].apply(lambda t: t.split(',')[0] + '-' + t.split(',')[-1]) #formatting times to only show range
+        result_tmp['Times'] = result_tmp['Times'].apply(self._format_ranges) #formatting times to only show range
         
         #sorting on months, needs to be done in order to formatt months correctly below
-        result_tmp['MonthsNum'] = result_tmp['Months'].map(month_to_num)
-        result_tmp = result_tmp.sort_values(by=[self.ctype, 'MonthsNum'])
-        result_tmp.drop('MonthsNum', axis=1, inplace=True)
+        result_tmp['MonthsNum'] = result_tmp['Months'].map(month_to_num) #getting month numbers
+        result_tmp['MonthsNumStr'] = result_tmp['MonthsNum'].astype(str) #new column with month numbers as string representations
+        result_tmp = result_tmp.sort_values(by=[self.ctype, 'MonthsNum']) #sorting
+        
+        result_tmp.drop('Months', axis=1, inplace=True) #drop original Months
+        result_tmp.drop('MonthsNum', axis=1, inplace=True) #drop numeric month representation
+        result_tmp = result_tmp.rename(columns = {'MonthsNumStr': 'Months'}) #keep only string representations of numbers as Months
 
         if self.ctype == "fish":
             group2 = result_tmp.groupby([self.ctype, 'shadowSize', 'location', 'value', 'Times'])
@@ -80,11 +153,14 @@ class Critter:
             group2 = result_tmp.groupby([self.ctype, 'location', 'value', 'Times'])
 
         result = group2['Months'].apply(','.join).reset_index()
-        result['Months'] = result['Months'].apply(lambda m: m.split(',')[0] + '-' + m.split(',')[-1]) #formatting months to only show range
+        result['Months'] = result['Months'].apply(self._format_ranges) #formatting months to only show range
+        result['Months'] = result['Months'].apply(self._month_ranges_totext) #month name range instead of numbers 
 
         return result.to_string(index=False)
 
     def most_valuable(self, top=10):
+        '''Return most valuable critters. Possible to show least valuable by adding a minus sign to top argument'''
+        
         this_df = self.df[self.df['isMonth'] & self.df['isTime']][[self.ctype, 'location', 'value' ]]
         this_df['value'] = this_df['value'].apply(lambda v: int(v) if v != '?' else 0)
         
