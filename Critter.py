@@ -4,6 +4,8 @@ import calendar
 from datetime import datetime
 import regex as re
 import collections
+from operator import itemgetter
+from itertools import groupby
 
 pd.options.display.max_colwidth = 100
 
@@ -50,34 +52,10 @@ class Critter:
         In this class used for months and times'''
         
         lst = list(map(int, string_input.split(',')))
-        full_range = range(lst[0], lst[-1] + 1)
-        missing = [0] + [x for x in full_range if x not in lst] #find missing numbers in input range, add a leading zero for easier indexing later
-        
-        if len(missing) > 1:
-            #add a semicolon to original range list, in place of missing number(s)
-            for m in missing:
-                if m != 0:
-                    lst.insert(m-1, ';')
-                    
-            #determin index slice(s)
-            indices = []
-            for i,v in enumerate(missing):
-                if i == 0:
-                    indices.append((v, missing[i+1]-1))
-                elif i < len(missing)-1:
-                    indices.append((v+1, missing[i+1]-1))
-                else:
-                    indices.append((v, lst[-1]))
-        else:
-            #if range is not broken, do not slice into subparts
-            indices = [(0, lst[-1]+1)]
-        
-        #create a list based on slices
-        new_lst = [lst[start:end] for start, end in indices]
-
-        #final formatting
+        ranges = [list(map(itemgetter(1), g)) for k, g in groupby(enumerate(lst), lambda x: x[0]-x[1])] #magic
         final_lst = []
-        for elem in new_lst:
+        
+        for elem in ranges:
             if len(elem) > 0:
                 if len(elem) > 1:
                     substring = str(elem[0]) + '-' + str(elem[-1])
@@ -146,21 +124,23 @@ class Critter:
         result_tmp.drop('Months', axis=1, inplace=True) #drop original Months
         result_tmp.drop('MonthsNum', axis=1, inplace=True) #drop numeric month representation
         result_tmp = result_tmp.rename(columns = {'MonthsNumStr': 'Months'}) #keep only string representations of numbers as Months
-
+        
         if self.ctype == "fish":
             group2 = result_tmp.groupby([self.ctype, 'shadowSize', 'location', 'value', 'Times'])
         else:
             group2 = result_tmp.groupby([self.ctype, 'location', 'value', 'Times'])
 
         result = group2['Months'].apply(','.join).reset_index()
+        
         result['Months'] = result['Months'].apply(self._format_ranges) #formatting months to only show range
+        
         result['Months'] = result['Months'].apply(self._month_ranges_totext) #month name range instead of numbers 
 
         return result.to_string(index=False)
 
     def most_valuable(self, top=10):
         '''Return most valuable critters. Possible to show least valuable by adding a minus sign to top argument'''
-        
+
         this_df = self.df[self.df['isMonth'] & self.df['isTime']][[self.ctype, 'location', 'value' ]]
         this_df['value'] = this_df['value'].apply(lambda v: int(v) if v != '?' else 0)
         
