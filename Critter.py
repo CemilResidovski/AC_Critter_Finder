@@ -52,7 +52,13 @@ class Critter:
         In this class used for months and times'''
         
         lst = list(map(int, string_input.split(',')))
-        ranges = [list(map(itemgetter(1), g)) for k, g in groupby(enumerate(lst), lambda x: x[0]-x[1])] #magic
+        #magic
+        ''' itertools.groupby groups the iterable into chunks,
+            grouping by the key, which here is a lambda function that calculates the difference between two adjacent elements; 
+            whenever the difference changes, we get a new chunk -> voila!
+            operator.itemgetter(1) makes sure we produce the actual elements, and not the enumerator of these, which is at index 0
+        '''
+        ranges = [list(map(itemgetter(1), g)) for k, g in groupby(enumerate(lst), lambda x: x[0]-x[1])] 
         final_lst = []
         
         for elem in ranges:
