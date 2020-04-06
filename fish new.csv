@@ -1,0 +1,81 @@
+,Name,Sell Price,Time of Year,Time of Day,Conditions,Shadow,Rarity
+0,Bitterling,900,Nov - Mar,All day,,Small,Very Common
+1,Pale chub,200,All Year,Afternoon,,Very Small,Very Common
+2,Crucian carp,160,All Year,All day,,Small,Very Common
+3,Dace,240,All Year,"Morning, Evening, Night",,Medium,Very Common
+4,Soft-shelled turtle,3750,Aug - Sept,"Morning, Evening, Night",,Large,Common
+5,Snapping turtle,5000,Apr - Oct,Night,,Large,Uncommon
+6,Freshwater goby,400,All Year,"Morning, Evening, Night",,Small,Common
+7,Loach,400,Mar - May,All day,,Small,Very Common
+8,Bluegill,180,All Year,Afternoon,,Small,Very Common
+9,Yellow perch,300,Oct - Mar,All day,,Medium,Very Common
+10,Black bass,400,All Year,All day,,Large,Very Common
+11,Tilapia,800,June - Oct,All day,,Medium,Common
+12,Pike,1800,Sept - Dec,All day,,Large,Uncommon
+13,Pond smelt,400,Dec - Feb,All day,,Very Small,Very Common
+14,Sweetfish,900,July - Sept,All day,,Medium,Common
+15,Mitten crab,2000,Sept - Oct,"Morning, Evening, Night",,Small,Uncommon
+16,Guppy,1300,Apr - Nov,9am ~ 4pm,,Very Small,Common
+17,Nibble fish,1500,May - Sept,9am ~ 4pm,,Very Small,Common
+18,Angelfish,3000,May - Oct,"Morning, Evening, Night",,Small,Uncommon
+19,Betta,2500,May - Oct,9am ~ 4pm,,Small,Rare
+20,Neon tetra,500,Apr - Nov,9am ~ 4pm,,Very Small,Common
+21,Rainbowfish,800,May - Oct,Afternoon,,Very Small,Common
+22,Piranha,2500,June - Sept,"Afternoon, Night",,Small,Common
+23,Arowana,10000,June - Sept,"Morning, Evening, Night",,Large,Uncommon
+24,Dorado,15000,June - Sept,4am ~ 9pm,,Large,Rare
+25,Arapaima,10000,June - Sept,"Morning, Evening, Night",,Huge,Uncommon
+26,Saddled bichir,4000,June - Sept,Night,,Large,Uncommon
+27,Sea butterfly,1000,Dec - Mar,All day,,Very Small,Common
+28,Sea horse,1100,Apr - Nov,All day,,Very Small,Uncommon
+29,Clown fish,650,Apr - Sept,All day,,Very Small,Common
+30,Surgeonfish,1000,Apr - Sept,All day,,Small,Uncommon
+31,Butterfly Fish,1000,Apr - Sept,All day,,Small,Common
+32,Napoleonfish,10000,July - Aug,4am ~ 9pm,,Huge,Uncommon
+33,Zebra turkeyfish,500,Apr - Nov,All day,,Medium,Common
+34,Blowfish,5000,Nov - Feb,9pm ~ 4am,,Medium,Uncommon
+35,Puffer fish,250,July - Sept,All day,,Medium,Very Common
+36,Anchovy,200,All Year,"Morning, Afternoon, Evening",,Small,Common
+37,Horse mackerel,150,All Year,All day,,Small,Very Common
+38,Barred knifejaw,5000,Mar - Nov,All day,,Medium,Common
+39,Sea bass,400,All Year,All day,,Large,Very Common
+40,Red Snapper,3000,All Year,All day,,Large,Common
+41,Dab,300,Oct - Apr,All day,,Medium,Very Common
+42,Olive flounder,800,All Year,All day,,Large,Very Common
+43,Squid,500,Dec - Aug,All day,,Medium,Common
+44,Moray eel,2000,Aug - Oct,All day,,Long & Thin,Common
+45,Ribbon eel,600,June - Oct,All day,,Long & Thin,Common
+46,Ocean sunfish,4000,July - Sept,"Morning, Afternoon, Evening",,Finned,Rare
+47,Ray,3000,Aug - Nov,4am ~ 9pm,,Large,Uncommon
+48,Saw Shark,12000,June - Sept,"Morning, Evening, Night",,Finned,Uncommon
+49,Hammerhead shark,8000,June - Sept,"Morning, Evening, Night",,Finned,Uncommon
+50,Great white shark,15000,June - Sept,"Morning, Evening, Night",,Finned,Uncommon
+51,Whale shark,13000,June - Sept,All day,,Finned,Uncommon
+52,Suckerfish,1500,June - Sept,All day,,Finned,Uncommon
+53,Football fish,2500,Nov - Mar,4pm - 9am,,Large,Uncommon
+54,Oarfish,9000,Dec - May,All day,,Huge,Uncommon
+55,Barreleye,15000,All Year,9pm ~ 4am,,Small,Rare
+56,Coelacanth,15000,All Year,All day,Rainy day,Huge,Uncommon
+57,Carp,300,All Year,All day,,Large,Common
+58,Koi,4000,All Year,"Morning, Evening, Night",,Large,Uncommon
+59,Goldfish,1300,All Year,All day,,Very Small,Common
+60,Pop-eyed goldfish,1300,All Year,Afternoon,,Very Small,Common
+61,Ranchu goldfish,4500,All Year,9am ~ 4pm,,Small,Uncommon
+62,Killifish,300,Apr - Aug,All day,,Very Small,Common
+63,Crawfish,200,Apr - Sept,All day,,Small,Very Common
+64,Tadpole,100,Mar - July,All day,,Very Small,Common
+65,Frog,120,May - Aug,All day,,Small,Common
+66,Catfish,800,May - Oct,"Morning, Evening, Night",,Large,Common
+67,Giant snakehead,5500,June - Aug,9am ~ 4pm,,Large,Rare
+68,Gar,6000,June - Sept,"Morning, Evening, Night",,Huge,Rare
+69,Salmon,700,Sept,All day,,Large,Common
+70,King salmon,1800,Sept,All day,,Large,Common
+71,Sturgeon,10000,Sept - Mar,All day,,Huge,Uncommon
+72,Cherry salmon,1000,"Mar - June, Sept - Nov",4pm ~ 9am,,Medium,Uncommon
+73,Char,3800,"Mar - June, Sept - Nov",4pm ~ 9am,,Medium,Uncommon
+74,Golden trout,15000,"Mar - May, Sept - Nov",4pm ~ 9am,,Medium,Rare
+75,String fish,15000,Dec - Mar,4pm ~ 9am,,Huge,Rare
+76,Tuna,7000,Jan - Apr,All day,,Huge,Rare
+77,Blue marlin,10000,"Jan - Apr, July - Sept",All day,,Huge,Rare
+78,Giant trevally,4500,May - Oct,All day,,Large,Rare
+79,Mahi-mahi,12000,May - Oct,All day,,Huge,Rare
