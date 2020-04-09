@@ -144,10 +144,10 @@ class Critter:
 
         new_times_df = pd.read_csv(f"{self.ctype} new.csv")
         new_times = new_times_df[['Name','Time of Day']]
-        new_times = new_times.rename({'Name': self.ctype, 'Time of Day': 'Times'}, axis=1)
+        new_times = new_times.rename({'Name': self.ctype, 'Time of Day': 'New times'}, axis=1)
 
-        result.drop('Times', axis=1, inplace=True)#dropping incorrect times from {Critter}DB
-        result = pd.merge(result, new_times, on = self.ctype, how='left')#replacing with new times
+        #result.drop('Times', axis=1, inplace=True)#dropping incorrect times from {Critter}DB
+        result = pd.merge(result, new_times, on = self.ctype, how='left')#if new times appears as NaN, the critter names in the data sources are not the same
 
         return result.to_string(index=False)
 
