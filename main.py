@@ -4,7 +4,7 @@ from Critter import Fish, Bug
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large", "largest", "largeish"]
 loc_commands = ["sea", "pond", "rivers", "river", "rivermouth", "rivercliff"]
 critter_commands = ["bug", "bugs", "fish"]
-info_commands = ["new", "expiring", "find", "info"]
+info_commands = ["new", "expiring", "find", "expensive", "info"]
 
 def print_list(l):
     print(", ".join(l))
@@ -68,6 +68,9 @@ while True:
         elif info == "find":
             print(f"Searching for fish called {critter_to_find}...")
             print(f.get_fish_info(critter_to_find))
+        elif info == "expensive":
+            print(f"Searching for most valuable {critter}...")
+            print(f.most_valuable_fish())
 
     elif critter in ["bug", "bugs"]:
         b = Bug()
@@ -83,3 +86,6 @@ while True:
         elif info == "find" or info == "info":
             print(f"Searching for bugs called {critter_to_find}...")
             print(b.get_bug_info(critter_to_find))
+        elif info == "expensive":
+            print(f"Searching for most valuable {critter}...")
+            print(b.most_valuable_bug())
