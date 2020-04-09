@@ -146,10 +146,13 @@ class Critter:
         new_times = new_times_df[['Name','Time of Day']]
         new_times = new_times.rename({'Name': self.ctype, 'Time of Day': 'New times'}, axis=1)
 
-        #result.drop('Times', axis=1, inplace=True)#dropping incorrect times from {Critter}DB
-        result = pd.merge(result, new_times, on = self.ctype, how='left')#if new times appears as NaN, the critter names in the data sources are not the same
-
-        return result.to_string(index=False)
+        result[f"{self.ctype} 2"] = result[self.ctype].apply(lambda s: (s.lower()).replace(' ', ''))
+        new_times[f"{self.ctype} 2"] = new_times[self.ctype].apply(lambda s: (s.lower()).replace(' ', ''))
+        
+        final_result = pd.merge(result, new_times[[f"{self.ctype} 2", 'New times']], on = f"{self.ctype} 2", how='left')#if new times appears as NaN, the critter names in the data sources are not the same
+        final_result.drop(f"{self.ctype} 2", axis=1, inplace=True)
+        
+        return final_result.to_string(index=False)
 
     def most_valuable(self, top=10):
         '''Return most valuable critters. Possible to show least valuable by adding a minus sign to top argument'''
