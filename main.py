@@ -2,7 +2,7 @@ from sys import exit
 from Critter import Fish, Bug
 
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large", "largest", "largeish"]
-loc_commands = ["sea", "pond", "rivers", "river", "rivermouth", "rivercliff"]
+loc_commands = ["sea", "pond", "rivers", "river", "rivermouth", "rivercliff", "pier"]
 critter_commands = ["bug", "bugs", "fish"]
 info_commands = ["new", "expiring", "find", "expensive", "info"]
 

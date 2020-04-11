@@ -98,61 +98,63 @@ class Critter:
     '''TODO: check to see if all temporary dataframes take up unneccesary memory space, and if these can/should be deleted from memory after they are dealt with'''
     def get_info(self, critter):
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
-
-        critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=re.IGNORECASE)
         
-        assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0, f"No critter matching {critter} was found, make sure spelling is correct!"
-
-        if self.ctype == "fish":
-            columns = [self.ctype, 'shadowSize', 'location', 'Months', 'value', 'Times']
-        else: 
-            columns = [self.ctype, 'location', 'Months', 'value', 'Times']
-        
-        this_df = self.df[self.df['isMonth'] & self.df['isTime'] & critter_name_criterion][columns]
-        this_df['Times'] = this_df['Times'].astype(str)
-        this_df['value'] = this_df['value'].apply(lambda v: int(v) if v != '?' else 0)
-        
-        if self.ctype == "fish":
-            this_df['shadowSize'] = this_df['shadowSize'].astype(str)
-            group = this_df.groupby([self.ctype, 'shadowSize', 'location', 'Months', 'value'])
+        try:
+            critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=re.IGNORECASE)
+            assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0
+        except AssertionError:
+            print(f"No match on {critter} was found, make sure spelling is correct.")
         else:
-            group = this_df.groupby([self.ctype, 'location', 'Months', 'value'])
-        
-        #available times per (available) month and location for chosen critter(s)
-        result_tmp = group['Times'].apply(','.join).reset_index() 
-        result_tmp['Times'] = result_tmp['Times'].apply(self._format_ranges) #formatting times to only show range
-        
-        #sorting on months, needs to be done in order to formatt months correctly below
-        result_tmp['MonthsNum'] = result_tmp['Months'].map(month_to_num) #getting month numbers
-        result_tmp['MonthsNumStr'] = result_tmp['MonthsNum'].astype(str) #new column with month numbers as string representations
-        result_tmp = result_tmp.sort_values(by=[self.ctype, 'MonthsNum']) #sorting
-        
-        result_tmp.drop('Months', axis=1, inplace=True) #drop original Months
-        result_tmp.drop('MonthsNum', axis=1, inplace=True) #drop numeric month representation
-        result_tmp = result_tmp.rename(columns = {'MonthsNumStr': 'Months'}) #keep only string representations of numbers as Months
-        
-        if self.ctype == "fish":
-            group2 = result_tmp.groupby([self.ctype, 'shadowSize', 'location', 'value', 'Times'])
-        else:
-            group2 = result_tmp.groupby([self.ctype, 'location', 'value', 'Times'])
+            if self.ctype == "fish":
+                columns = [self.ctype, 'shadowSize', 'location', 'Months', 'value', 'Times']
+            else: 
+                columns = [self.ctype, 'location', 'Months', 'value', 'Times']
+            
+            this_df = self.df[self.df['isMonth'] & self.df['isTime'] & critter_name_criterion][columns]
+            this_df['Times'] = this_df['Times'].astype(str)
+            this_df['value'] = this_df['value'].apply(lambda v: int(v) if v != '?' else 0)
+            
+            if self.ctype == "fish":
+                this_df['shadowSize'] = this_df['shadowSize'].astype(str)
+                group = this_df.groupby([self.ctype, 'shadowSize', 'location', 'Months', 'value'])
+            else:
+                group = this_df.groupby([self.ctype, 'location', 'Months', 'value'])
+            
+            #available times per (available) month and location for chosen critter(s)
+            result_tmp = group['Times'].apply(','.join).reset_index() 
+            result_tmp['Times'] = result_tmp['Times'].apply(self._format_ranges) #formatting times to only show range
+            
+            #sorting on months, needs to be done in order to formatt months correctly below
+            result_tmp['MonthsNum'] = result_tmp['Months'].map(month_to_num) #getting month numbers
+            result_tmp['MonthsNumStr'] = result_tmp['MonthsNum'].astype(str) #new column with month numbers as string representations
+            result_tmp = result_tmp.sort_values(by=[self.ctype, 'MonthsNum']) #sorting
+            
+            result_tmp.drop('Months', axis=1, inplace=True) #drop original Months
+            result_tmp.drop('MonthsNum', axis=1, inplace=True) #drop numeric month representation
+            result_tmp = result_tmp.rename(columns = {'MonthsNumStr': 'Months'}) #keep only string representations of numbers as Months
+            
+            if self.ctype == "fish":
+                group2 = result_tmp.groupby([self.ctype, 'shadowSize', 'location', 'value', 'Times'])
+            else:
+                group2 = result_tmp.groupby([self.ctype, 'location', 'value', 'Times'])
 
-        result = group2['Months'].apply(','.join).reset_index()
-        
-        result['Months'] = result['Months'].apply(self._format_ranges) #formatting months to only show range
-        
-        result['Months'] = result['Months'].apply(self._month_ranges_totext) #month name range instead of numbers 
+            result = group2['Months'].apply(','.join).reset_index()
+            
+            result['Months'] = result['Months'].apply(self._format_ranges) #formatting months to only show range
+            
+            result['Months'] = result['Months'].apply(self._month_ranges_totext) #month name range instead of numbers 
 
-        new_times_df = pd.read_csv(f"{self.ctype} new.csv")
-        new_times = new_times_df[['Name','Time of Day']]
-        new_times = new_times.rename({'Name': self.ctype, 'Time of Day': 'New times'}, axis=1)
+            new_times_df = pd.read_csv(f"{self.ctype} new.csv")
+            new_times = new_times_df[['Name','Time of Day']]
+            new_times = new_times.rename({'Name': self.ctype, 'Time of Day': 'New times'}, axis=1)
 
-        result[f"{self.ctype} 2"] = result[self.ctype].apply(lambda s: (s.lower()).replace(' ', ''))
-        new_times[f"{self.ctype} 2"] = new_times[self.ctype].apply(lambda s: (s.lower()).replace(' ', ''))
-        
-        final_result = pd.merge(result, new_times[[f"{self.ctype} 2", 'New times']], on = f"{self.ctype} 2", how='left')#if new times appears as NaN, the critter names in the data sources are not the same
-        final_result.drop(f"{self.ctype} 2", axis=1, inplace=True)
-        
-        return final_result.to_string(index=False)
+            result[f"{self.ctype} 2"] = result[self.ctype].apply(lambda s: (s.lower()).replace(' ', ''))
+            new_times[f"{self.ctype} 2"] = new_times[self.ctype].apply(lambda s: (s.lower()).replace(' ', ''))
+            
+            final_result = pd.merge(result, new_times[[f"{self.ctype} 2", 'New times']], on = f"{self.ctype} 2", how='left')#if new times appears as NaN, the critter names in the data sources are not the same
+            final_result.drop(f"{self.ctype} 2", axis=1, inplace=True)
+            
+            return final_result.to_string(index=False)
 
     def most_valuable(self, top=10):
         '''Return most valuable critters. Possible to show least valuable by adding a minus sign to top argument'''
