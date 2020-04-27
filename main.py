@@ -63,7 +63,6 @@ while True:
             print(f"Searching for currently available {size} size fish at {loc} location...")
             print_list(f.get_fish(loc,size))
             cache['fish'] = '\\b' + '(' + '|'.join(f.get_fish(loc,size)) + ')' + '\\b'
-            print(cache['fish'])
         elif info == "new":
             print(f"Searching for new fish this month...")
             print_list(f.new_fish())
