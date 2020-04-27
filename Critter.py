@@ -99,10 +99,10 @@ class Critter:
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
         try:
             if autostring:
-                flag = 0
+                critter_name_criterion = self.df[self.ctype].str.match(critter)
             else:
-                flag = re.IGNORECASE
-            critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=flag)
+                critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=re.IGNORECASE)
+            
             assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0
         except AssertionError:
             print(f"No match on {critter} was found, make sure spelling is correct.")
