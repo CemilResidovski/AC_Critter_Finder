@@ -95,12 +95,14 @@ class Critter:
     
         return result
 
-    '''TODO: check to see if all temporary dataframes take up unneccesary memory space, and if these can/should be deleted from memory after they are dealt with'''
-    def get_info(self, critter):
+    def get_info(self, critter, autostring=False):
         '''Return info on when and where to find specific critter (name of a specific critter, e.g. 'Stringfish')'''
-        
         try:
-            critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=re.IGNORECASE)
+            if autostring:
+                flag = 0
+            else:
+                flag = re.IGNORECASE
+            critter_name_criterion = self.df[self.ctype].str.contains(critter, regex=True, flags=flag)
             assert isinstance(critter, str) and len(self.df[critter_name_criterion]) > 0
         except AssertionError:
             print(f"No match on {critter} was found, make sure spelling is correct.")
@@ -200,8 +202,8 @@ class Fish:
     def expiring_fish(self):
         return Critter(self.df, self.ctype).expiring()
     
-    def get_fish_info(self, critter):
-        return Critter(self.df, self.ctype).get_info(critter)
+    def get_fish_info(self, critter, autostring=False):
+        return Critter(self.df, self.ctype).get_info(critter, autostring)
     
     def most_valuable_fish(self):
         return Critter(self.df, self.ctype).most_valuable()
@@ -228,8 +230,8 @@ class Bug:
     def expiring_bugs(self):
         return Critter(self.df, self.ctype).expiring()
     
-    def get_bug_info(self, critter):
-        return Critter(self.df, self.ctype).get_info(critter)
+    def get_bug_info(self, critter, autostring=False):
+        return Critter(self.df, self.ctype).get_info(critter, autostring)
     
     def most_valuable_bug(self):
         return Critter(self.df, self.ctype).most_valuable()
