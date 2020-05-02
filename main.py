@@ -76,6 +76,7 @@ while True:
                     print(f.get_fish_info(cache['fish'], autostring=True))
                 else:
                     print("First search for currently available fish!")
+                    continue
             else:
                 print(f"Searching for fish called {critter_to_find}...")
                 print(f.get_fish_info(critter_to_find))
@@ -102,6 +103,7 @@ while True:
                     print(b.get_bug_info(cache['bug'], autostring=True))
                 else:
                     print("First search for currently available bugs!")
+                    continue
             else:
                 print(f"Searching for bug called {critter_to_find}...")
                 print(b.get_bug_info(critter_to_find))
