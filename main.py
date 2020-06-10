@@ -4,7 +4,7 @@ from Critter import Fish, Bug
 size_commands = ["smallish", "smallest", "small", "medium", "large", "x large", "largest", "largeish"]
 loc_commands = ["sea", "pond", "rivers", "river", "rivermouth", "rivercliff", "pier"]
 critter_commands = ["bug", "bugs", "fish"]
-info_commands = ["new", "expiring", "find", "expensive", "info"]
+info_commands = ["new", "expiring", "find", "info", "expensive"]
 
 cache = {}
 
@@ -12,23 +12,37 @@ def print_list(l):
     print(", ".join(l))
 
 print("Meta commands: quit, help")
+print("Remember to at least include \"bug\" or \"fish\" when searching for fish/bugs")
 while True:
     critter, loc, size, info, to_find = "any", "any", "any", "any", "any"
     print()
-    cmd = input("Remember to at least include \"bug\" or \"fish\": ").lower()
+    cmd = input("Search: ").lower()
     if "quit" in cmd:
         exit()
     elif "help" in cmd:
-        print("Supported animal types: ")
+        print("------------------")
+        print("Supported critter types: ")
         print_list(critter_commands)
-        print("Supported sizes: ")
+        print("------------")
+        print("Supported sizes (only for fish): ")
         print_list(size_commands)
-        print("Supported locations: ")
+        print("------------")
+        print("Supported locations (only for fish): ")
         print_list(loc_commands)
+        print("------------")
         print("Supported actions: ")
         print_list(info_commands)
-        print("To search for eg. a fish: write fish find \"sea bass\"")
-        print("To get more info on multiple fish/bugs first search for fish/bug(s) \"any\", \"new\", or \"expiring\", and then type fish/bug(s) find \"all\".")
+        print("------------")
+        print("To search for all new/expiring fish/bugs write: fish new/expiring")
+        print("To get info on a fish/bug write: fish/bug(s) find \"[critter name]\".")
+        print("------------")
+        print("To get more info on multiple specific fish/bugs type in a search string, e.g [critter] find \"(bass|carp|shark)\" to get all critters whose names contain parts of the search string.\n" 
+        "Alternatively first search for fish/bug(s) \"any\", \"new\", or \"expiring\", and then type fish/bug(s) find \"all\".")
+        print("------------")
+        print("To see which fish/bugs are the most valued type: fish/bug(s) expensive.")
+        print("------------")
+        print("Note: info and find are equivalent")
+        print("------------------")
         continue
     elif "info" in cmd or "find" in cmd:
         start_index = cmd.find('"')
