@@ -28,7 +28,7 @@ while True:
         print("Supported actions: ")
         print_list(info_commands)
         print("To search for eg. a fish: write fish find \"sea bass\"")
-        print("To get more info on all fish/bugs ")
+        print("To get more info on multiple fish/bugs first search for fish/bug(s) \"any\", \"new\", or \"expiring\", and then type fish/bug(s) find \"all\".")
         continue
     elif "info" in cmd or "find" in cmd:
         start_index = cmd.find('"')
@@ -63,19 +63,24 @@ while True:
             print(f"Searching for currently available {size} size fish at {loc} location...")
             print_list(f.get_fish(loc,size))
             cache['fish'] = '\\b' + '(' + '|'.join(f.get_fish(loc,size)) + ')' + '\\b'
+            cache_name = f'currently available (size: {size}, location: {loc})'
         elif info == "new":
             print(f"Searching for new fish this month...")
             print_list(f.new_fish())
+            cache['fish'] = '\\b' + '(' + '|'.join(f.new_fish()) + ')' + '\\b'
+            cache_name = 'new'
         elif info == "expiring":
             print(f"Searching for fish that will be unavailable next month...")
             print_list(f.expiring_fish())
+            cache['fish'] = '\\b' + '(' + '|'.join(f.expiring_fish()) + ')' + '\\b'
+            cache_name = 'expiring'
         elif info == "find":
             if critter_to_find.lower() == 'all':
                 if len(cache[critter]) > 0:
-                    print(f"Searching for info on {critter_to_find.lower()} fish currently available ...")
+                    print(f"Searching for info on {critter_to_find.lower()} {cache_name} fish  ...")
                     print(f.get_fish_info(cache['fish'], autostring=True))
                 else:
-                    print("First search for currently available fish!")
+                    print("First search for available fish!")
                     continue
             else:
                 print(f"Searching for fish called {critter_to_find}...")
@@ -90,16 +95,21 @@ while True:
             print(f"Searching for currently available bugs...")
             print_list(b.get_bugs())
             cache['bug'] =  '|'.join(b.get_bugs())
+            cache_name = 'currently available'
         elif info == "new":
             print(f"Searching for new bugs this month...")
             print_list(b.new_bugs())
+            cache['bug'] = '\\b' + '(' + '|'.join(b.new_bugs()) + ')' + '\\b'
+            cache_name = 'new'
         elif info == "expiring":
             print(f"Searching for bugs that will be unavailable next month...")
             print_list(b.expiring_bugs())
+            cache['bug'] = '\\b' + '(' + '|'.join(b.expiring_bugs()) + ')' + '\\b'
+            cache_name = 'expiring'
         elif info == "find" or info == "info":
             if critter_to_find.lower() == 'all':
-                if len(cache[critter]) > 0:
-                    print(f"Searching for info on {critter_to_find.lower()} bugs currently available ...")
+                if len(cache[critter.strip('s')]) > 0:
+                    print(f"Searching for info on {critter_to_find.lower()} {cache_name} bugs ...")
                     print(b.get_bug_info(cache['bug'], autostring=True))
                 else:
                     print("First search for currently available bugs!")

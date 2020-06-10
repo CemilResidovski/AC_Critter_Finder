@@ -154,7 +154,7 @@ class Critter:
             new_times[f"{self.ctype} 2"] = new_times[self.ctype].apply(lambda s: (s.lower()).replace(' ', ''))
             
             final_result = pd.merge(result, new_times[[f"{self.ctype} 2", 'New times']], on = f"{self.ctype} 2", how='left')#if new times appears as NaN, the critter names in the data sources are not the same
-            final_result.drop(f"{self.ctype} 2", axis=1, inplace=True)
+            final_result.drop(columns = [f"{self.ctype} 2", "Times"], axis=1, inplace=True)
             
             return final_result.to_string(index=False)
 
